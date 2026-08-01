@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Olaloves-Design — Portfolio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          brand: {
+            DEFAULT: '#6d5ef5',
+            dim: '#4a3fc4',
+          }
+        },
+        fontFamily: {
+          mono: ['"JetBrains Mono"', '"IBM Plex Mono"', 'ui-monospace', 'monospace'],
+        },
+        keyframes: {
+          fadeUp: {
+            '0%':   { opacity: '0', transform: 'translateY(14px)' },
+            '100%': { opacity: '1', transform: 'translateY(0)' },
+          },
+          fadeIn: {
+            '0%':   { opacity: '0' },
+            '100%': { opacity: '1' },
+          },
+          scaleIn: {
+            '0%':   { opacity: '0', transform: 'scale(.94)' },
+            '100%': { opacity: '1', transform: 'scale(1)' },
+          },
+        },
+        animation: {
+          fadeUp: 'fadeUp .6s cubic-bezier(.16,.84,.44,1) both',
+          fadeIn: 'fadeIn .4s ease both',
+          scaleIn: 'scaleIn .28s cubic-bezier(.16,.84,.44,1) both',
+        }
+      }
+    }
+  }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'IBM Plex Mono', monospace;
+    background-color: #0a0a0d;
+  }
+  .heading { font-family: 'Space Grotesk', sans-serif; }
+
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.18); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.28); }
+  * { scrollbar-color: rgba(255,255,255,0.18) transparent; scrollbar-width: thin; }
+
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+
+  /* ---- animated ambient background ---- */
+  #bgFx {
+    position: fixed;
+    inset: 0;
+    z-index: -10;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  #bgFx .blob {
+    position: absolute;
+    border-radius: 9999px;
+    will-change: transform;
+  }
+  #bgFx .blob-a {
+    width: 900px; height: 700px;
+    left: -12%; top: -18%;
+    background: radial-gradient(ellipse at center, rgba(109,94,245,0.35), transparent 62%);
+    animation: driftA 24s ease-in-out infinite;
+  }
+  #bgFx .blob-b {
+    width: 800px; height: 620px;
+    right: -14%; bottom: -16%;
+    background: radial-gradient(ellipse at center, rgba(109,94,245,0.20), transparent 58%);
+    animation: driftB 30s ease-in-out infinite;
+    animation-delay: -8s;
+  }
+  #bgFx .blob-c {
+    width: 500px; height: 500px;
+    left: 45%; top: 30%;
+    background: radial-gradient(circle at center, rgba(109,94,245,0.10), transparent 65%);
+    animation: driftC 34s ease-in-out infinite;
+    animation-delay: -14s;
+  }
+  @keyframes driftA {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50%      { transform: translate(40px, 35px) scale(1.08); }
+  }
+  @keyframes driftB {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50%      { transform: translate(-55px, -30px) scale(1.06); }
+  }
+  @keyframes driftC {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50%      { transform: translate(30px, -45px) scale(1.12); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #bgFx .blob { animation: none !important; }
+  }
+
+  .stagger { animation-delay: var(--d, 0ms); }
+
+  .card-img { transition: transform .6s cubic-bezier(.16,.84,.44,1); }
+  .card:hover .card-img { transform: scale(1.06); }
+  .card-overlay {
+    opacity: 0;
+    transition: opacity .35s ease;
+    background: linear-gradient(180deg, rgba(10,10,13,0) 20%, rgba(10,10,13,.92) 100%);
+  }
+  .card:hover .card-overlay { opacity: 1; }
+  .card-overlay-content {
+    transform: translateY(8px);
+    opacity: 0;
+    transition: all .35s ease .05s;
+  }
+  .card:hover .card-overlay-content { transform: translateY(0); opacity: 1; }
+
+  .quest-link { position: relative; }
+  .quest-link::before {
+    content: '';
+    position: absolute; left: -16px; top: 50%; translate: 0 -50%;
+    width: 3px; height: 0; background: #6d5ef5;
+    transition: height .25s ease;
+  }
+  .quest-link:hover::before, .quest-link.active::before { height: 70%; }
+
+  .modal-slide-enter { animation: slideFade .35s cubic-bezier(.16,.84,.44,1) both; }
+  @keyframes slideFade {
+    0% { opacity: 0; transform: translateX(var(--slide-x, 24px)); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+
+  [data-reveal] { opacity: 0; }
+
+  .quest-link.active { color: #fff; }
+  .quest-link.active::before { height: 70%; }
+
+  .project-figure { cursor: zoom-in; }
+  .project-figure img { transition: transform .5s cubic-bezier(.16,.84,.44,1); }
+  .project-figure:hover img { transform: scale(1.02); }
+  .zoom-hint {
+    opacity: 0; transition: opacity .25s ease;
+  }
+  .project-figure:hover .zoom-hint { opacity: 1; }
+
+  .view-fade { animation: viewFade .45s cubic-bezier(.16,.84,.44,1) both; }
+  @keyframes viewFade {
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+</head>
+<body class="text-neutral-200 antialiased min-h-screen">
+
+<!-- ============ ANIMATED AMBIENT BACKGROUND ============ -->
+<div id="bgFx" aria-hidden="true">
+  <div class="blob blob-a"></div>
+  <div class="blob blob-b"></div>
+  <div class="blob blob-c"></div>
+</div>
+
+<!-- ============ MOBILE TOP BAR (hidden on lg+) ============ -->
+<header class="lg:hidden sticky top-0 z-30 flex items-center justify-between px-5 py-4 border-b border-white/10 bg-[#0a0a0d]/95 backdrop-blur">
+  <a href="#/" class="heading text-lg font-bold tracking-tight text-white">Olaloves-Design</a>
+  <button id="menuToggle" aria-label="Open menu" aria-expanded="false" class="relative w-10 h-10 flex flex-col items-center justify-center gap-[5px] border border-white/15">
+    <span class="hamburger-line block w-5 h-[2px] bg-white transition-all duration-300"></span>
+    <span class="hamburger-line block w-5 h-[2px] bg-white transition-all duration-300"></span>
+    <span class="hamburger-line block w-5 h-[2px] bg-white transition-all duration-300"></span>
+  </button>
+</header>
+
+<!-- ============ MOBILE DRAWER BACKDROP ============ -->
+<div id="sidebarBackdrop" class="lg:hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-40 hidden"></div>
+
+<div class="flex flex-col lg:flex-row min-h-screen">
+
+  <!-- ============ SIDEBAR / MOBILE DRAWER ============ -->
+  <aside id="sidebar" class="fixed inset-y-0 right-0 z-50 w-[82%] max-w-xs sm:max-w-sm translate-x-full transition-transform duration-300 ease-out
+                              lg:static lg:z-auto lg:translate-x-0 lg:w-72 lg:max-w-none lg:shrink-0 lg:h-screen lg:sticky lg:top-0
+                              border-l lg:border-l-0 lg:border-r border-white/10 bg-[#0a0a0d] px-6 py-8 overflow-y-auto no-scrollbar lg:animate-fadeUp" style="--d:0ms">
+
+    <button id="sidebarClose" aria-label="Close menu" class="lg:hidden absolute top-5 right-5 text-neutral-400 hover:text-white transition-colors text-xl leading-none">✕</button>
+
+    <div>
+      <h1 class="heading text-3xl font-bold leading-[1.05] tracking-tight text-white">Olaloves- <br/>Design</h1>
+      <p class="mt-2 text-[11px] tracking-[0.2em] text-brand uppercase">Graphic Designer</p>
+    </div>
+
+    <div class="mt-8 border-t border-white/10 pt-5">
+      <div class="flex items-center justify-between mb-4">
+        <span class="text-[10px] tracking-[0.2em] text-neutral-500 uppercase">Featured Projects</span>
+        <button onclick="resetFilter()" class="text-[10px] tracking-[0.15em] text-neutral-500 hover:text-brand transition-colors uppercase">[ Reset All ]</button>
+      </div>
+      <nav id="questLog" class="flex flex-col gap-3 text-[13px]"></nav>
+    </div>
+
+    <div class="mt-8 flex flex-col gap-2">
+      <button class="quest-btn text-left border border-brand/50 text-brand hover:bg-brand hover:text-white transition-colors px-4 py-2.5 text-[11px] tracking-[0.15em] uppercase">[ Black Market ]</button>
+      <button class="quest-btn text-left border border-white/15 text-neutral-300 hover:border-white/40 transition-colors px-4 py-2.5 text-[11px] tracking-[0.15em] uppercase">[ Player Info ]</button>
+    </div>
+
+    <div class="mt-8 pt-5 border-t border-white/10 flex flex-col gap-2 text-[12px] text-neutral-400">
+      <a href="mailto:you@example.com" class="hover:text-brand transition-colors flex items-center gap-1">you@example.com <span>↗</span></a>
+      <a href="#" class="hover:text-brand transition-colors flex items-center gap-1">@ Instagram <span>↗</span></a>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main id="top" class="flex-1 px-5 sm:px-8 lg:px-10 py-8">
+
+    <!-- ---------- HOME VIEW ---------- -->
+
+    <section id="homeView">
+      <!-- filter bar -->
+      <div class="flex flex-wrap items-center gap-x-2 gap-y-2 sm:gap-x-3 animate-fadeUp" style="--d:80ms">
+        <button data-filter="all" class="filter-btn active flex items-center justify-center px-4 py-2 text-[11px] tracking-[0.15em] uppercase border border-white/20 transition-colors leading-none">[ All ]</button>
+        <button data-filter="cover" class="filter-btn flex items-center justify-center px-4 py-2 text-[11px] tracking-[0.15em] uppercase text-neutral-500 border border-transparent hover:text-white transition-colors leading-none">[ Cover Art Design ]</button>
+        <button data-filter="logo" class="filter-btn flex items-center justify-center px-4 py-2 text-[11px] tracking-[0.15em] uppercase text-neutral-500 border border-transparent hover:text-white transition-colors leading-none">[ Logo Design ]</button>
+        <button data-filter="thumbnail" class="filter-btn flex items-center justify-center px-4 py-2 text-[11px] tracking-[0.15em] uppercase text-neutral-500 border border-transparent hover:text-white transition-colors leading-none">[ Thumbnail Design ]</button>
+        <button data-filter="poster" class="filter-btn flex items-center justify-center px-4 py-2 text-[11px] tracking-[0.15em] uppercase text-neutral-500 border border-transparent hover:text-white transition-colors leading-none">[ Poster Design ]</button>
+        <button data-filter="fashion" class="filter-btn flex items-center justify-center px-4 py-2 text-[11px] tracking-[0.15em] uppercase text-neutral-500 border border-transparent hover:text-white transition-colors leading-none">[ Fashion Design ]</button>
+      </div>
+
+      <div class="mt-4 pt-4 border-t border-white/10 flex items-center gap-3 text-[11px] text-neutral-500 animate-fadeUp" style="--d:120ms">
+        <span>© <span id="year"></span> // YOUR CITY</span>
+        <span id="clock" class="flex items-center gap-1">🕐 —</span>
+      </div>
+
+      <!-- grid -->
+      <div id="grid" class="mt-8 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5 sm:gap-6"></div>
+
+      <div class="mt-16 mb-6 text-center animate-fadeUp" style="--d:200ms">
+        <p class="text-brand text-[11px] tracking-[0.3em] uppercase mb-2">— More Projects</p>
+        <h2 class="heading text-2xl sm:text-3xl font-bold text-white">Coming Soon</h2>
+        <p class="mt-3 text-[12px] text-neutral-500 max-w-md mx-auto leading-relaxed">This visual journal is a constantly evolving chromatic file archive. Updates committed build-by-build.</p>
+        <a href="#top" class="inline-flex flex-col items-center gap-1 mt-8 text-neutral-500 hover:text-brand transition-colors text-[11px] tracking-[0.15em] uppercase">
+          <span>↑</span> Back to top
+        </a>
+      </div>
+    </section>
+
+    <!-- ---------- PROJECT DETAIL VIEW ---------- -->
+    <section id="projectView" class="hidden"></section>
+
+  </main>
+</div>
+
+<!-- ============ MODAL ============ -->
+<div id="modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 sm:p-8">
+  <div id="modalBackdrop" class="absolute inset-0 bg-black/85 backdrop-blur-sm"></div>
+
+  <div class="relative w-full max-w-4xl animate-scaleIn" id="modalCard">
+    <button id="modalClose" class="absolute -top-10 right-0 sm:top-0 sm:-right-10 text-neutral-400 hover:text-white transition-colors text-2xl leading-none">✕</button>
+
+    <div class="bg-neutral-950 border border-white/10 overflow-hidden">
+      <div class="relative aspect-video bg-neutral-900 flex items-center justify-center overflow-hidden">
+        <img id="modalImg" src="" alt="" class="w-full h-full object-cover" />
+
+        <button id="prevBtn" class="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-11 sm:h-11 flex items-center justify-center bg-black/50 hover:bg-brand text-white border border-white/20 transition-colors">‹</button>
+        <button id="nextBtn" class="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-11 sm:h-11 flex items-center justify-center bg-black/50 hover:bg-brand text-white border border-white/20 transition-colors">›</button>
+      </div>
+
+      <div class="px-5 py-4 flex items-center justify-between gap-4 border-t border-white/10">
+        <div>
+          <p id="modalTitle" class="heading text-white font-semibold text-sm sm:text-base"></p>
+          <p id="modalMeta" class="text-[11px] text-brand tracking-[0.15em] uppercase mt-0.5"></p>
+        </div>
+        <p id="modalCount" class="text-[11px] text-neutral-500 shrink-0"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ===================== DATA ===================== */
+/* Replace image URLs with your own files later — everything else keys off this array. */
+const projects = [
+  {
+    id: 'p1', title: '2TONE — Cover Art', category: 'cover', year: '2026', badge: null, featured: true,
+    subLabel: 'Music Digital Art',
+    tagline: 'Placeholder tagline — a one to two sentence hook describing what this piece is and who it was made for.',
+    description: `Placeholder description. Replace with the real project write-up: what the brief was, who the client or artist was, and the creative direction you took. A second paragraph can go into the details — techniques used, references, and the tools or process behind the final piece.`,
+    images: [
+      'https://placehold.co/1920x1080/1c2431/6d5ef5?text=2TONE+01',
+      'https://placehold.co/1920x1080/161b26/6d5ef5?text=2TONE+02',
+      'https://placehold.co/1920x1080/10141c/6d5ef5?text=2TONE+03',
+    ]
+  },
+  {
+    id: 'p2', title: 'JHUTH — Cover Art', category: 'cover', year: '2026', badge: 'View Record',
+    subLabel: 'Music Digital Art',
+    tagline: 'A dark cinematic cover artwork blending emotional tension with surreal visual storytelling.',
+    description: `Placeholder description. Explore themes of deception, emotional conflict, and fractured identity through minimalist staging and atmospheric lighting. The visual direction combines surreal character styling, cinematic composition, and moody color grading to create a striking music cover.`,
+    images: [
+      'https://placehold.co/1920x1080/17161c/6d5ef5?text=JHUTH+01',
+      'https://placehold.co/1920x1080/1d1c24/6d5ef5?text=JHUTH+02',
+    ]
+  },
+  {
+    id: 'p3', title: "Unc's Fried Chicken — Logo Design", category: 'logo', year: '2026', badge: null, featured: true,
+    subLabel: 'Fast Food Brand Logo Design',
+    tagline: "A playful fast-food brand identity built around a bold mascot, retro visuals, and oversized comfort-food culture.",
+    description: `Placeholder description. A fast-food branding project inspired by viral fried chicken culture and modern snack branding aesthetics. The identity combines a humorous illustrated mascot with bold typography, warm retro-inspired colors, and expressive visual elements designed for packaging, social media, and promotional applications.`,
+    images: [
+      'https://placehold.co/1920x1080/2c2419/f5b942?text=UNCS+01',
+      'https://placehold.co/1920x1080/241d14/f5b942?text=UNCS+02',
+    ]
+  },
+  {
+    id: 'p4', title: 'Even They Ran From It — Thumbnail', category: 'thumbnail', year: '2026', badge: null, featured: true,
+    subLabel: 'YouTube Thumbnail Design',
+    tagline: 'Placeholder tagline for a high-contrast, high-CTR thumbnail design.',
+    description: `Placeholder description. Explain the video's premise, the emotional hook the thumbnail needed to sell, and why the composition, expression, and type treatment were chosen to stop the scroll.`,
+    images: [
+      'https://placehold.co/1920x1080/173040/6d5ef5?text=THUMB+01',
+      'https://placehold.co/1920x1080/122530/6d5ef5?text=THUMB+02',
+      'https://placehold.co/1920x1080/0e1e28/6d5ef5?text=THUMB+03',
+    ]
+  },
+  {
+    id: 'p5', title: 'Isolation Aftermath — Poster Design', category: 'poster', year: '2026', badge: null, featured: true,
+    subLabel: 'Album Poster Design',
+    tagline: 'A gritty textured poster built around isolation, grain, and analog decay.',
+    description: `Placeholder description. Detail the mood board, typography choices, and print treatment (grain, halftone, distress) used to give the poster its analog, lived-in feel.`,
+    images: [
+      'https://placehold.co/1920x1080/3a2416/e8763a?text=AFTERMATH+01',
+      'https://placehold.co/1920x1080/2e1c11/e8763a?text=AFTERMATH+02',
+    ]
+  },
+  {
+    id: 'p6', title: 'Monkey King — Fashion Design', category: 'fashion', year: '2025', badge: null, featured: true,
+    subLabel: 'Streetwear Graphic Design',
+    tagline: 'A streetwear graphic pulling from Journey to the West mythology and modern type collage.',
+    description: `Placeholder description. Cover the folklore reference points, the garment it was designed for, and how the illustration and typography were adapted for print (screen print vs. DTG, placement, colorways).`,
+    images: [
+      'https://placehold.co/1920x1080/3a1414/f5424a?text=FASHION+01',
+      'https://placehold.co/1920x1080/2b0f0f/f5424a?text=FASHION+02',
+    ]
+  },
+  {
+    id: 'p7', title: 'Thumbnail Archive', category: 'thumbnail', year: '2025–2026', badge: null,
+    subLabel: 'Ongoing Thumbnail Collection',
+    tagline: 'A running archive of thumbnail explorations across different creators and formats.',
+    description: `Placeholder description. This is a living collection rather than a single brief — use this space to describe the range of styles, clients, or experiments represented across the set.`,
+    images: [
+      'https://placehold.co/1920x1080/222/6d5ef5?text=ARCHIVE+01',
+      'https://placehold.co/1920x1080/1a1a1a/6d5ef5?text=ARCHIVE+02',
+      'https://placehold.co/1920x1080/141414/6d5ef5?text=ARCHIVE+03',
+      'https://placehold.co/1920x1080/101010/6d5ef5?text=ARCHIVE+04',
+    ]
+  },
+  {
+    id: 'p8', title: 'Visual Experiments', category: 'cover', year: '2025', badge: null,
+    subLabel: 'Personal Practice',
+    tagline: 'Self-directed studies in composition, color grading, and character staging.',
+    description: `Placeholder description. Frame this as a practice space — what techniques or software features you were testing, and what carried over into client work afterward.`,
+    images: [
+      'https://placehold.co/1920x1080/241922/6d5ef5?text=EXP+01',
+      'https://placehold.co/1920x1080/1c1420/6d5ef5?text=EXP+02',
+      'https://placehold.co/1920x1080/140e18/6d5ef5?text=EXP+03',
+    ]
+  },
+  {
+    id: 'p9', title: 'Wukong T-Shirt', category: 'fashion', year: '2025', badge: null,
+    subLabel: 'Apparel Graphic Design',
+    tagline: 'A bold apparel graphic built around the Monkey King, designed for print on dark garments.',
+    description: `Placeholder description. Note the garment color, print method, and any variant colorways, plus the reasoning behind the layout for chest vs. back placement.`,
+    images: [
+      'https://placehold.co/1920x1080/3a1414/f5424a?text=WUKONG+01',
+      'https://placehold.co/1920x1080/2b0f0f/f5424a?text=WUKONG+02',
+    ]
+  },
+];
+
+const categoryLabel = {
+  cover: 'Cover Art Design', logo: 'Logo Design', thumbnail: 'Thumbnail Design',
+  poster: 'Poster Design', fashion: 'Fashion Design'
+};
+
+/* ===================== MOBILE NAV DRAWER ===================== */
+const sidebar = document.getElementById('sidebar');
+const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+const menuToggle = document.getElementById('menuToggle');
+const sidebarClose = document.getElementById('sidebarClose');
+const hamburgerLines = menuToggle.querySelectorAll('.hamburger-line');
+
+function openDrawer() {
+  sidebar.classList.remove('translate-x-full');
+  sidebar.classList.add('translate-x-0');
+  sidebarBackdrop.classList.remove('hidden');
+  menuToggle.setAttribute('aria-expanded', 'true');
+  hamburgerLines[0].style.transform = 'translateY(7px) rotate(45deg)';
+  hamburgerLines[1].style.opacity = '0';
+  hamburgerLines[2].style.transform = 'translateY(-7px) rotate(-45deg)';
+  document.body.style.overflow = 'hidden';
+}
+function closeDrawer() {
+  sidebar.classList.add('translate-x-full');
+  sidebar.classList.remove('translate-x-0');
+  sidebarBackdrop.classList.add('hidden');
+  menuToggle.setAttribute('aria-expanded', 'false');
+  hamburgerLines[0].style.transform = '';
+  hamburgerLines[1].style.opacity = '';
+  hamburgerLines[2].style.transform = '';
+  document.body.style.overflow = '';
+}
+function isDrawerOpen() { return sidebar.classList.contains('translate-x-0'); }
+
+menuToggle.addEventListener('click', () => (isDrawerOpen() ? closeDrawer() : openDrawer()));
+sidebarClose.addEventListener('click', closeDrawer);
+sidebarBackdrop.addEventListener('click', closeDrawer);
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && isDrawerOpen()) closeDrawer(); });
+
+// close the drawer automatically after tapping any navigation item inside it (mobile only)
+sidebar.addEventListener('click', (e) => {
+  const target = e.target.closest('a, button.quest-btn');
+  if (target && window.innerWidth < 1024) closeDrawer();
+});
+
+// keep drawer state sane if the viewport is resized past the desktop breakpoint
+window.addEventListener('resize', () => {
+  if (window.innerWidth >= 1024) closeDrawer();
+});
+
+/* ===================== ELEMENT REFS ===================== */
+const grid = document.getElementById('grid');
+const questLog = document.getElementById('questLog');
+const homeView = document.getElementById('homeView');
+const projectView = document.getElementById('projectView');
+
+/* ===================== RENDER GRID (home) ===================== */
+function renderGrid(filter = 'all') {
+  grid.innerHTML = '';
+  const list = projects.filter(p => filter === 'all' || p.category === filter);
+
+  list.forEach((p, i) => {
+    const card = document.createElement('div');
+    card.className = 'card group relative aspect-square overflow-hidden bg-neutral-900 border border-white/10 cursor-pointer';
+    card.style.setProperty('--d', `${i * 60}ms`);
+    card.dataset.reveal = '';
+    card.dataset.project = p.id;
+
+    card.innerHTML = `
+      <img src="${p.images[0]}" alt="${p.title}" class="card-img w-full h-full object-cover" />
+      <div class="card-overlay absolute inset-0"></div>
+      <div class="card-overlay-content absolute inset-x-0 bottom-0 p-4 flex items-end justify-between gap-2">
+        <div>
+          ${p.badge ? `<p class="text-brand text-[11px] tracking-[0.15em] uppercase font-semibold mb-1">${p.badge}</p>` : ''}
+          <p class="heading text-white font-semibold text-sm leading-snug">${p.title}</p>
+          <p class="text-[10px] text-neutral-400 tracking-[0.1em] uppercase mt-1">${categoryLabel[p.category]}</p>
+        </div>
+        <span class="shrink-0 text-[10px] tracking-[0.1em] uppercase text-neutral-400 border border-white/20 px-2 py-1">${p.year}</span>
+      </div>
+    `;
+
+    // clicking a home-grid card opens the project's standalone page
+    card.addEventListener('click', () => { window.location.hash = `#/project/${p.id}`; });
+    grid.appendChild(card);
+  });
+
+  requestAnimationFrame(() => {
+    document.querySelectorAll('[data-reveal]').forEach(el => {
+      el.classList.add('animate-fadeUp');
+      el.style.opacity = '';
+    });
+  });
+}
+
+/* ===================== QUEST LOG (sidebar nav) ===================== */
+function renderQuestLog(activeId = null) {
+  questLog.innerHTML = '';
+  const featured = projects.filter(p => p.featured);
+  featured.forEach((p, i) => {
+    const a = document.createElement('a');
+    a.href = `#/project/${p.id}`;
+    a.className = 'quest-link flex items-baseline gap-2 text-neutral-500 hover:text-white transition-colors' + (p.id === activeId ? ' active' : '');
+    a.innerHTML = `<span class="text-brand text-[11px]">${String(i + 1).padStart(2, '0')}</span><span class="tracking-[0.02em]">${p.title.toUpperCase()}</span>`;
+    questLog.appendChild(a);
+  });
+}
+
+/* ===================== FILTERS (home only) ===================== */
+const filterBtns = document.querySelectorAll('.filter-btn');
+function setActiveFilter(filter) {
+  filterBtns.forEach(b => {
+    const isActive = b.dataset.filter === filter;
+    b.classList.toggle('active', isActive);
+    b.classList.toggle('text-white', isActive);
+    b.classList.toggle('border-white/20', isActive);
+    b.classList.toggle('text-neutral-500', !isActive);
+    b.classList.toggle('border-transparent', !isActive);
+  });
+}
+filterBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const f = btn.dataset.filter;
+    setActiveFilter(f);
+    renderGrid(f);
+  });
+});
+function resetFilter() {
+  window.location.hash = '#/';
+  setActiveFilter('all');
+  renderGrid('all');
+}
+
+/* ===================== PROJECT DETAIL PAGE ===================== */
+function renderProjectPage(id) {
+  const idx = projects.findIndex(p => p.id === id);
+  if (idx === -1) { window.location.hash = '#/'; return; }
+  const p = projects[idx];
+  const prevP = projects[(idx - 1 + projects.length) % projects.length];
+  const nextP = projects[(idx + 1) % projects.length];
+
+  projectView.innerHTML = `
+    <div class="view-fade">
+      <div class="flex items-center justify-between gap-4 flex-wrap text-[11px] tracking-[0.15em] uppercase">
+        <a href="#/" class="text-brand hover:text-white transition-colors">← [ Return to Index Archive ]</a>
+        <div class="flex items-center gap-4 text-neutral-500">
+          <a href="#/project/${prevP.id}" class="hover:text-white transition-colors">← Prev</a>
+          <span class="text-neutral-700">/</span>
+          <a href="#/project/${nextP.id}" class="hover:text-white transition-colors">Next →</a>
+        </div>
+      </div>
+
+      <div class="border-t border-white/10 mt-4 mb-8"></div>
+
+      <h1 class="heading text-3xl sm:text-5xl font-bold text-white leading-[1.05] max-w-3xl">${p.title}</h1>
+      <p class="mt-3 text-[11px] tracking-[0.2em] uppercase text-neutral-500">${p.subLabel || categoryLabel[p.category]}</p>
+      <p class="mt-5 text-base sm:text-lg text-neutral-200 max-w-2xl leading-relaxed">${p.tagline}</p>
+      <p class="mt-4 text-[13px] text-neutral-500 max-w-2xl leading-relaxed whitespace-pre-line">${p.description}</p>
+
+      <div class="mt-10 flex flex-col gap-0">
+        ${p.images.map((src, i) => `
+          <figure class="project-figure relative border-x border-t last:border-b border-white/10 bg-neutral-900 overflow-hidden aspect-video" data-img-index="${i}">
+            <img src="${src}" alt="${p.title} — image ${i + 1}" class="w-full h-full object-cover block" loading="lazy" />
+            <span class="zoom-hint absolute bottom-3 right-3 text-[10px] tracking-[0.15em] uppercase bg-black/60 border border-white/20 text-white px-2 py-1">⤢ View</span>
+          </figure>
+        `).join('')}
+      </div>
+
+      <div class="mt-14 pt-8 border-t border-white/10 flex items-center justify-between gap-4 text-[11px] tracking-[0.15em] uppercase">
+        <a href="#/project/${prevP.id}" class="text-neutral-500 hover:text-white transition-colors">← ${prevP.title}</a>
+        <a href="#/project/${nextP.id}" class="text-neutral-500 hover:text-white transition-colors text-right">${nextP.title} →</a>
+      </div>
+    </div>
+  `;
+
+  // wire up each image figure to open the modal, browsing this project's images
+  projectView.querySelectorAll('.project-figure').forEach(fig => {
+    fig.addEventListener('click', () => {
+      openModal(p.id, parseInt(fig.dataset.imgIndex, 10));
+    });
+  });
+}
+
+/* ===================== ROUTER ===================== */
+function showHome() {
+  homeView.classList.remove('hidden');
+  projectView.classList.add('hidden');
+  renderQuestLog(null);
+}
+function showProject(id) {
+  homeView.classList.add('hidden');
+  projectView.classList.remove('hidden');
+  renderProjectPage(id);
+  renderQuestLog(id);
+  window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
+}
+
+function handleRoute() {
+  const hash = window.location.hash; // e.g. "#/project/p2" or "#/" or ""
+  const match = hash.match(/^#\/project\/(.+)$/);
+  if (match) {
+    showProject(match[1]);
+  } else {
+    showHome();
+  }
+}
+
+window.addEventListener('hashchange', handleRoute);
+
+/* ===================== MODAL (image lightbox) ===================== */
+const modal = document.getElementById('modal');
+const modalImg = document.getElementById('modalImg');
+const modalTitle = document.getElementById('modalTitle');
+const modalMeta = document.getElementById('modalMeta');
+const modalCount = document.getElementById('modalCount');
+const modalBackdrop = document.getElementById('modalBackdrop');
+const modalClose = document.getElementById('modalClose');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+
+let activeProject = null;
+let activeIndex = 0;
+
+function openModal(projectId, index) {
+  activeProject = projects.find(p => p.id === projectId);
+  activeIndex = index;
+  renderModalImage(0);
+  modal.classList.remove('hidden');
+  modal.classList.add('flex');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  modal.classList.add('hidden');
+  modal.classList.remove('flex');
+  document.body.style.overflow = '';
+}
+
+function renderModalImage(dir) {
+  modalImg.style.setProperty('--slide-x', dir >= 0 ? '24px' : '-24px');
+  modalImg.classList.remove('modal-slide-enter');
+  void modalImg.offsetWidth; // restart animation
+  modalImg.classList.add('modal-slide-enter');
+
+  modalImg.src = activeProject.images[activeIndex];
+  modalImg.alt = activeProject.title;
+  modalTitle.textContent = activeProject.title;
+  modalMeta.textContent = `${categoryLabel[activeProject.category]} · ${activeProject.year}`;
+  modalCount.textContent = `${activeIndex + 1} / ${activeProject.images.length}`;
+}
+
+function stepModal(dir) {
+  if (!activeProject) return;
+  const len = activeProject.images.length;
+  activeIndex = (activeIndex + dir + len) % len;
+  renderModalImage(dir);
+}
+
+modalClose.addEventListener('click', closeModal);
+modalBackdrop.addEventListener('click', closeModal);
+prevBtn.addEventListener('click', () => stepModal(-1));
+nextBtn.addEventListener('click', () => stepModal(1));
+document.addEventListener('keydown', (e) => {
+  if (modal.classList.contains('hidden')) return;
+  if (e.key === 'Escape') closeModal();
+  if (e.key === 'ArrowLeft') stepModal(-1);
+  if (e.key === 'ArrowRight') stepModal(1);
+});
+
+/* ===================== CLOCK + YEAR ===================== */
+document.getElementById('year').textContent = new Date().getFullYear();
+function tick() {
+  const now = new Date();
+  document.getElementById('clock').textContent =
+    '🕐 ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+}
+tick();
+setInterval(tick, 1000);
+
+/* ===================== INIT ===================== */
+renderGrid('all');
+handleRoute();
+</script>
+</body>
+</html>

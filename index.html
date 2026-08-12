@@ -4,6 +4,10 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Olaloves-Design — Portfolio</title>
+<link rel="apple-touch-icon" sizes="180x180" href="favicon_io/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon_io/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon_io/favicon-16x16.png">
+<link rel="manifest" href="favicon_io/site.webmanifest">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
   tailwind.config = {
@@ -116,15 +120,9 @@
   .card-overlay {
     opacity: 0;
     transition: opacity .35s ease;
-    background: linear-gradient(180deg, rgba(10,10,13,0) 20%, rgba(10,10,13,.92) 100%);
+    background: rgba(0,0,0,0.22);
   }
   .card:hover .card-overlay { opacity: 1; }
-  .card-overlay-content {
-    transform: translateY(8px);
-    opacity: 0;
-    transition: all .35s ease .05s;
-  }
-  .card:hover .card-overlay-content { transform: translateY(0); opacity: 1; }
 
   .quest-link { position: relative; }
   .quest-link::before {
@@ -247,8 +245,8 @@
     </div>
 
     <div class="mt-8 flex flex-col gap-3">
-      <button class="quest-btn glow-stroke text-left text-brand hover:bg-brand hover:text-white transition-colors px-4 py-2.5 text-[11px] tracking-[0.15em] uppercase" style="--glow-color:#6d5ef5">[ Rate Cards ]</button>
-      <button class="quest-btn glow-stroke text-left text-neutral-300 hover:text-white transition-colors px-4 py-2.5 text-[11px] tracking-[0.15em] uppercase" style="--glow-color:#a0a0ff">[ About me ]</button>
+      <button id="rateCardsBtn" class="quest-btn glow-stroke text-left text-brand hover:bg-brand hover:text-white transition-colors px-4 py-2.5 text-[11px] tracking-[0.15em] uppercase" style="--glow-color:#6d5ef5">[ Rate Cards ]</button>
+      <button id="aboutMeBtn" class="quest-btn glow-stroke text-left text-neutral-300 hover:text-white transition-colors px-4 py-2.5 text-[11px] tracking-[0.15em] uppercase" style="--glow-color:#a0a0ff">[ About me ]</button>
     </div>
 
     <div class="mt-8 pt-5 border-t border-white/10 flex flex-col gap-2 text-[12px] text-neutral-400">
@@ -279,15 +277,15 @@
       </div>
 
       <!-- grid -->
-      <div id="grid" class="mt-8 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5 sm:gap-6"></div>
+      <div id="grid" class="mt-8 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-x-5 gap-y-8 sm:gap-x-6 sm:gap-y-10"></div>
 
       <div class="mt-16 mb-6 text-center animate-fadeUp" style="--d:200ms">
         <p class="text-brand text-[11px] tracking-[0.3em] uppercase mb-2">— More Projects</p>
         <h2 class="heading text-2xl sm:text-3xl font-bold text-white">Coming Soon</h2>
         <p class="mt-3 text-[12px] text-neutral-500 max-w-md mx-auto leading-relaxed">This visual journal is a constantly evolving chromatic file archive. Updates committed build-by-build.</p>
-        <a href="#top" class="inline-flex flex-col items-center gap-1 mt-8 text-neutral-500 hover:text-brand transition-colors text-[11px] tracking-[0.15em] uppercase">
+        <button id="backToTopBtn" type="button" class="inline-flex flex-col items-center gap-1 mt-8 text-neutral-500 hover:text-brand transition-colors text-[11px] tracking-[0.15em] uppercase">
           <span>↑</span> Back to top
-        </a>
+        </button>
       </div>
     </section>
 
@@ -297,7 +295,7 @@
   </main>
 </div>
 
-<!-- ============ MODAL ============ -->
+<!-- ============ IMAGE MODAL ============ -->
 <div id="modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 sm:p-8">
   <div id="modalBackdrop" class="absolute inset-0 bg-black/85 backdrop-blur-sm"></div>
 
@@ -323,60 +321,178 @@
   </div>
 </div>
 
+<!-- ============ RATE CARDS MODAL ============ -->
+<div id="rateModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 sm:p-8">
+  <div id="rateModalBackdrop" class="absolute inset-0 bg-black/85 backdrop-blur-sm"></div>
+
+  <div class="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto no-scrollbar animate-scaleIn">
+    <button id="rateModalClose" class="absolute -top-10 right-0 sm:top-0 sm:-right-10 text-neutral-400 hover:text-white transition-colors text-2xl leading-none">✕</button>
+
+    <div class="bg-neutral-950 border border-white/10 p-6 sm:p-9">
+      <div class="flex items-start justify-between gap-4 mb-2">
+        <p class="text-[11px] tracking-[0.2em] uppercase text-brand">[ Rate Cards ]</p>
+        <button id="rateModalCloseInline" aria-label="Close" class="shrink-0 w-8 h-8 flex items-center justify-center border border-white/15 text-neutral-400 hover:text-white hover:border-white/40 transition-colors text-lg leading-none">✕</button>
+      </div>
+      <h2 class="heading text-2xl sm:text-3xl font-bold text-white mb-3">Pricing &amp; Packages</h2>
+      <p class="text-[13px] text-neutral-500 mb-8 max-w-md leading-relaxed">
+        Placeholder intro text — describe your process, typical turnaround time, and what's included in a project. Replace this with your own copy.
+      </p>
+
+      <div class="flex flex-col divide-y divide-white/10 border-t border-b border-white/10">
+        <div class="py-5 flex items-start justify-between gap-4">
+          <div class="pr-4">
+            <p class="heading text-white font-semibold text-sm">Logo Design</p>
+            <p class="text-[12px] text-neutral-500 mt-1 max-w-sm leading-relaxed">Placeholder description — what's included, number of concepts, revisions, and final file formats.</p>
+          </div>
+          <p class="text-brand text-sm font-semibold shrink-0">$XXX</p>
+        </div>
+        <div class="py-5 flex items-start justify-between gap-4">
+          <div class="pr-4">
+            <p class="heading text-white font-semibold text-sm">Cover Art Design</p>
+            <p class="text-[12px] text-neutral-500 mt-1 max-w-sm leading-relaxed">Placeholder description — single cover artwork, source files, and turnaround time.</p>
+          </div>
+          <p class="text-brand text-sm font-semibold shrink-0">$XXX</p>
+        </div>
+        <div class="py-5 flex items-start justify-between gap-4">
+          <div class="pr-4">
+            <p class="heading text-white font-semibold text-sm">Thumbnail Design</p>
+            <p class="text-[12px] text-neutral-500 mt-1 max-w-sm leading-relaxed">Placeholder description — per-thumbnail rate or bundle pricing, revisions included.</p>
+          </div>
+          <p class="text-brand text-sm font-semibold shrink-0">$XX</p>
+        </div>
+        <div class="py-5 flex items-start justify-between gap-4">
+          <div class="pr-4">
+            <p class="heading text-white font-semibold text-sm">Poster Design</p>
+            <p class="text-[12px] text-neutral-500 mt-1 max-w-sm leading-relaxed">Placeholder description — print-ready poster, dimensions, and file types delivered.</p>
+          </div>
+          <p class="text-brand text-sm font-semibold shrink-0">$XXX</p>
+        </div>
+        <div class="py-5 flex items-start justify-between gap-4">
+          <div class="pr-4">
+            <p class="heading text-white font-semibold text-sm">Fashion / Custom Graphic</p>
+            <p class="text-[12px] text-neutral-500 mt-1 max-w-sm leading-relaxed">Placeholder description — apparel graphics, print-ready files, and colorway variants.</p>
+          </div>
+          <p class="text-brand text-sm font-semibold shrink-0">$XXX</p>
+        </div>
+      </div>
+
+      <p class="mt-6 text-[11px] text-neutral-600 uppercase tracking-[0.15em]">Placeholder — rates subject to change. Contact for custom quotes.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ABOUT ME MODAL ============ -->
+<div id="aboutModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 sm:p-8">
+  <div id="aboutModalBackdrop" class="absolute inset-0 bg-black/85 backdrop-blur-sm"></div>
+
+  <div class="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto no-scrollbar animate-scaleIn">
+    <button id="aboutModalClose" class="absolute -top-10 right-0 sm:top-0 sm:-right-10 text-neutral-400 hover:text-white transition-colors text-2xl leading-none">✕</button>
+
+    <div class="bg-neutral-950 border border-white/10 p-6 sm:p-9">
+      <div class="flex items-start justify-between gap-4 mb-2">
+        <p class="text-[11px] tracking-[0.2em] uppercase text-brand">[  Info ]</p>
+        <button id="aboutModalCloseInline" aria-label="Close" class="shrink-0 w-8 h-8 flex items-center justify-center border border-white/15 text-neutral-400 hover:text-white hover:border-white/40 transition-colors text-lg leading-none">✕</button>
+      </div>
+      <h2 class="heading text-2xl sm:text-3xl font-bold text-white mb-6">About Me</h2>
+
+      <div class="flex flex-col sm:flex-row gap-6">
+        <div class="w-28 h-28 sm:w-36 sm:h-36 shrink-0 border border-white/15 bg-neutral-900 flex items-center justify-center text-neutral-600 text-[10px] uppercase tracking-[0.1em] text-center px-2">
+          <img src="/profile pic.webp" alt="" srcset="" class="">
+        </div>
+        <div class="flex-1 flex flex-col gap-4 text-[13px] text-neutral-400 leading-relaxed">
+          <p>Placeholder bio paragraph — introduce yourself, your background, and what drew you to design. Replace this with your own story.</p>
+          <p>Placeholder paragraph — describe your process, the tools you use, and the kind of projects you love working on.</p>
+        </div>
+      </div>
+
+      <div class="mt-8 pt-6 border-t border-white/10 grid grid-cols-2 sm:grid-cols-3 gap-y-4 gap-x-4 text-[12px]">
+        <div>
+          <p class="text-neutral-600 uppercase tracking-[0.1em] text-[10px] mb-1">Based in</p>
+          <p class="text-neutral-300">Nigeria</p>
+        </div>
+        <div>
+          <p class="text-neutral-600 uppercase tracking-[0.1em] text-[10px] mb-1">Focus</p>
+          <p class="text-neutral-300">Grahic Design & Branding</p>
+        </div>
+        <div>
+          <p class="text-neutral-600 uppercase tracking-[0.1em] text-[10px] mb-1">Tools</p>
+          <p class="text-neutral-300">
+            Photoshop
+            <br>
+            Illustrator 
+            <br>
+
+            </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
-/* ===================== DATA ===================== */
+/* ===================== PROJECT DATA ===================== */
 /* Replace image URLs with your own files later — everything else keys off this array. */
 const projects = [
   {
-    id: 'p1', title: '2TONE — Cover Art', category: 'cover', year: '2026', badge: null, featured: true,
+    id: 'p1', title: 'ASCEND — Cover Art', category: 'cover', year: '2025', badge: null, featured: true,
     subLabel: 'Music Digital Art',
     tagline: 'Placeholder tagline — a one to two sentence hook describing what this piece is and who it was made for.',
     description: `Placeholder description. Replace with the real project write-up: what the brief was, who the client or artist was, and the creative direction you took. A second paragraph can go into the details — techniques used, references, and the tools or process behind the final piece.`,
     images: [
-      'https://placehold.co/1920x1080/1c2431/6d5ef5?text=2TONE+01',
-      'https://placehold.co/1920x1080/161b26/6d5ef5?text=2TONE+02',
-      'https://placehold.co/1920x1080/10141c/6d5ef5?text=2TONE+03',
+      '/Cover art/ASCEND/ASCEND_1.jpg',
+      '/Cover art/ASCEND/ASCEND_2.jpg',
+      '/Cover art/ASCEND/ASCEND VID.gif',
     ]
   },
   {
-    id: 'p2', title: 'JHUTH — Cover Art', category: 'cover', year: '2026', badge: 'View Record',
+    id: 'p2', title: 'BOSTON FREESTYLE', category: 'cover', year: '2026', badge: 'View Record',
     subLabel: 'Music Digital Art',
     tagline: 'A dark cinematic cover artwork blending emotional tension with surreal visual storytelling.',
     description: `Placeholder description. Explore themes of deception, emotional conflict, and fractured identity through minimalist staging and atmospheric lighting. The visual direction combines surreal character styling, cinematic composition, and moody color grading to create a striking music cover.`,
     images: [
-      'https://placehold.co/1920x1080/17161c/6d5ef5?text=JHUTH+01',
+      '/Cover art/BOSTON_FREESTYLE/BSF.jpg',
       'https://placehold.co/1920x1080/1d1c24/6d5ef5?text=JHUTH+02',
     ]
   },
   {
-    id: 'p3', title: "Guadalupe's Mexican restaurant — Logo Design", category: 'logo', year: '2025', badge: null, featured: true,
+    id: 'p3', title: "Guadalupe's Mexican Restaurant — Logo ReDesign", category: 'logo', year: '2025', badge: null, featured: true,
     subLabel: 'Fast Food Brand Logo Design',
     tagline: "A playful fast-food brand identity built around a bold mascot, retro visuals, and oversized comfort-food culture.",
     description: `Placeholder description. A fast-food branding project inspired by viral fried chicken culture and modern snack branding aesthetics. The identity combines a humorous illustrated mascot with bold typography, warm retro-inspired colors, and expressive visual elements designed for packaging, social media, and promotional applications.`,
     images: [
-      'https://placehold.co/1920x1080/2c2419/f5b942?text=UNCS+01',
-      'https://placehold.co/1920x1080/241d14/f5b942?text=UNCS+02',
+      '/Gua/GUA0.jpg',
+      '/Gua/GUA1.jpg',
+      '/Gua/GUA2.jpg',
+      '/Gua/GUA3.jpg',
+      '/Gua/GUA4.jpg',
+      '/Gua/GUA5.jpg',
+      '/Gua/GUA6.jpg',
+      '/Gua/GUA7.jpg',
     ]
   },
   {
-    id: 'p4', title: 'Even They Ran From It — Thumbnail', category: 'thumbnail', year: '2026', badge: null, featured: true,
-    subLabel: 'YouTube Thumbnail Design',
-    tagline: 'Placeholder tagline for a high-contrast, high-CTR thumbnail design.',
-    description: `Placeholder description. Explain the video's premise, the emotional hook the thumbnail needed to sell, and why the composition, expression, and type treatment were chosen to stop the scroll.`,
+    id: 'p4', title: 'Thumbnail Archive', category: 'thumbnail', year: '2025–2026', badge: null,
+    subLabel: 'Ongoing Thumbnail Collection',
+    tagline: 'A running archive of thumbnail explorations across different creators and formats.',
+    description: `Placeholder description. This is a living collection rather than a single brief — use this space to describe the range of styles, clients, or experiments represented across the set.`,
     images: [
-      'https://placehold.co/1920x1080/173040/6d5ef5?text=THUMB+01',
-      'https://placehold.co/1920x1080/122530/6d5ef5?text=THUMB+02',
-      'https://placehold.co/1920x1080/0e1e28/6d5ef5?text=THUMB+03',
+      '/Thumbnails/Thumbnail_1.png',
+      'https://placehold.co/1920x1080/1a1a1a/6d5ef5?text=ARCHIVE+02',
+      'https://placehold.co/1920x1080/141414/6d5ef5?text=ARCHIVE+03',
+      'https://placehold.co/1920x1080/101010/6d5ef5?text=ARCHIVE+04',
     ]
   },
   {
-    id: 'p5', title: 'Isolation Aftermath — Poster Design', category: 'poster', year: '2026', badge: null, featured: true,
-    subLabel: 'Album Poster Design',
+    id: 'p5', title: 'Poster Design', category: 'poster', year: '2026', badge: null, featured: true,
+    subLabel: 'Poster Design',
     tagline: 'A gritty textured poster built around isolation, grain, and analog decay.',
     description: `Placeholder description. Detail the mood board, typography choices, and print treatment (grain, halftone, distress) used to give the poster its analog, lived-in feel.`,
+    
     images: [
-      'https://placehold.co/1920x1080/3a2416/e8763a?text=AFTERMATH+01',
-      'https://placehold.co/1920x1080/2e1c11/e8763a?text=AFTERMATH+02',
+      '/posters/luchador.jpg',
+      '/posters/Fast food.jpg',
+      '/posters/karaoke.jpg',
+      '/posters/food-truck.jpg',
     ]
   },
   {
@@ -390,24 +506,12 @@ const projects = [
     ]
   },
   {
-    id: 'p7', title: 'Thumbnail Archive', category: 'thumbnail', year: '2025–2026', badge: null,
-    subLabel: 'Ongoing Thumbnail Collection',
-    tagline: 'A running archive of thumbnail explorations across different creators and formats.',
-    description: `Placeholder description. This is a living collection rather than a single brief — use this space to describe the range of styles, clients, or experiments represented across the set.`,
-    images: [
-      'https://placehold.co/1920x1080/222/6d5ef5?text=ARCHIVE+01',
-      'https://placehold.co/1920x1080/1a1a1a/6d5ef5?text=ARCHIVE+02',
-      'https://placehold.co/1920x1080/141414/6d5ef5?text=ARCHIVE+03',
-      'https://placehold.co/1920x1080/101010/6d5ef5?text=ARCHIVE+04',
-    ]
-  },
-  {
-    id: 'p8', title: 'Visual Experiments', category: 'cover', year: '2025', badge: null,
+    id: 'p8', title: 'SCARS 2 STARS', category: 'cover', year: '2025', badge: null,
     subLabel: 'Personal Practice',
     tagline: 'Self-directed studies in composition, color grading, and character staging.',
     description: `Placeholder description. Frame this as a practice space — what techniques or software features you were testing, and what carried over into client work afterward.`,
     images: [
-      'https://placehold.co/1920x1080/241922/6d5ef5?text=EXP+01',
+      '/Cover Art/S2S/S2S_1.jpg',
       'https://placehold.co/1920x1080/1c1420/6d5ef5?text=EXP+02',
       'https://placehold.co/1920x1080/140e18/6d5ef5?text=EXP+03',
     ]
@@ -420,6 +524,26 @@ const projects = [
     images: [
       'https://placehold.co/1920x1080/3a1414/f5424a?text=WUKONG+01',
       'https://placehold.co/1920x1080/2b0f0f/f5424a?text=WUKONG+02',
+    ]
+  },
+  {
+    id: 'p10', title: 'THE COLLECTION', category: 'cover', year: '2026', badge: 'View Record',
+    subLabel: 'Music Digital Art',
+    tagline: 'A dark cinematic cover artwork blending emotional tension with surreal visual storytelling.',
+    description: `Placeholder description. Explore themes of deception, emotional conflict, and fractured identity through minimalist staging and atmospheric lighting. The visual direction combines surreal character styling, cinematic composition, and moody color grading to create a striking music cover.`,
+    images: [
+      '/Cover art/BRIT/The collection.jpg',
+      'https://placehold.co/1920x1080/1d1c24/6d5ef5?text=JHUTH+02',
+    ]
+  },
+     {
+    id: 'p11', title: 'UPS', category: 'cover', year: '2026', badge: 'View Record',
+    subLabel: 'Music Digital Art',
+    tagline: 'A dark cinematic cover artwork blending emotional tension with surreal visual storytelling.',
+    description: `Placeholder description. Explore themes of deception, emotional conflict, and fractured identity through minimalist staging and atmospheric lighting. The visual direction combines surreal character styling, cinematic composition, and moody color grading to create a striking music cover.`,
+    images: [
+      '/Cover art/UPS/UPS.jpg',
+      
     ]
   },
 ];
@@ -487,21 +611,23 @@ function renderGrid(filter = 'all') {
 
   list.forEach((p, i) => {
     const card = document.createElement('div');
-    card.className = 'card group relative aspect-square overflow-hidden bg-neutral-900 border border-white/10 cursor-pointer';
+    card.className = 'card group cursor-pointer';
     card.style.setProperty('--d', `${i * 60}ms`);
     card.dataset.reveal = '';
     card.dataset.project = p.id;
 
     card.innerHTML = `
-      <img src="${p.images[0]}" alt="${p.title}" class="card-img w-full h-full object-cover" />
-      <div class="card-overlay absolute inset-0"></div>
-      <div class="card-overlay-content absolute inset-x-0 bottom-0 p-4 flex items-end justify-between gap-2">
-        <div>
-          ${p.badge ? `<p class="text-brand text-[11px] tracking-[0.15em] uppercase font-semibold mb-1">${p.badge}</p>` : ''}
-          <p class="heading text-white font-semibold text-sm leading-snug">${p.title}</p>
-          <p class="text-[10px] text-neutral-400 tracking-[0.1em] uppercase mt-1">${categoryLabel[p.category]}</p>
+      <div class="relative aspect-square overflow-hidden bg-neutral-900 border border-white/10">
+        <img src="${p.images[0]}" alt="${p.title}" class="card-img w-full h-full object-cover" />
+        <div class="card-overlay absolute inset-0"></div>
+      </div>
+      <div class="mt-3 flex items-start justify-between gap-3">
+        <div class="min-w-0">
+          ${p.badge ? `<p class="text-brand text-[10px] tracking-[0.15em] uppercase font-semibold mb-1">${p.badge}</p>` : ''}
+          <p class="heading text-white font-semibold text-sm leading-snug truncate">${p.title}</p>
+          <p class="text-[10px] text-neutral-500 tracking-[0.1em] uppercase mt-1">${categoryLabel[p.category]}</p>
         </div>
-        <span class="shrink-0 text-[10px] tracking-[0.1em] uppercase text-neutral-400 border border-white/20 px-2 py-1">${p.year}</span>
+        <span class="shrink-0 text-[10px] tracking-[0.1em] uppercase text-neutral-500 border border-white/15 px-2 py-1">${p.year}</span>
       </div>
     `;
 
@@ -583,7 +709,12 @@ function renderProjectPage(id) {
       <p class="mt-4 text-[13px] text-neutral-500 max-w-2xl leading-relaxed whitespace-pre-line">${p.description}</p>
 
       <div class="mt-10 flex flex-col gap-0">
-        ${p.images.map((src, i) => `
+        ${p.images.map((src, i) => i === 0 ? `
+          <figure class="project-figure relative bg-neutral-900 overflow-hidden" data-img-index="${i}">
+            <img src="${src}" alt="${p.title} — image ${i + 1}" class="w-full h-auto block" loading="lazy" />
+            <span class="zoom-hint absolute bottom-3 right-3 text-[10px] tracking-[0.15em] uppercase bg-black/60 border border-white/20 text-white px-2 py-1">⤢ View</span>
+          </figure>
+        ` : `
           <figure class="project-figure relative bg-neutral-900 overflow-hidden aspect-video" data-img-index="${i}">
             <img src="${src}" alt="${p.title} — image ${i + 1}" class="w-full h-full object-cover block" loading="lazy" />
             <span class="zoom-hint absolute bottom-3 right-3 text-[10px] tracking-[0.15em] uppercase bg-black/60 border border-white/20 text-white px-2 py-1">⤢ View</span>
@@ -632,7 +763,7 @@ function handleRoute() {
 
 window.addEventListener('hashchange', handleRoute);
 
-/* ===================== MODAL (image lightbox) ===================== */
+/* ===================== IMAGE MODAL (lightbox) ===================== */
 const modal = document.getElementById('modal');
 const modalImg = document.getElementById('modalImg');
 const modalTitle = document.getElementById('modalTitle');
@@ -685,11 +816,68 @@ modalClose.addEventListener('click', closeModal);
 modalBackdrop.addEventListener('click', closeModal);
 prevBtn.addEventListener('click', () => stepModal(-1));
 nextBtn.addEventListener('click', () => stepModal(1));
+
+/* ===================== RATE CARDS MODAL ===================== */
+const rateModal = document.getElementById('rateModal');
+const rateModalBackdrop = document.getElementById('rateModalBackdrop');
+const rateModalClose = document.getElementById('rateModalClose');
+const rateModalCloseInline = document.getElementById('rateModalCloseInline');
+const rateCardsBtn = document.getElementById('rateCardsBtn');
+
+function openRateModal() {
+  rateModal.classList.remove('hidden');
+  rateModal.classList.add('flex');
+  document.body.style.overflow = 'hidden';
+}
+function closeRateModal() {
+  rateModal.classList.add('hidden');
+  rateModal.classList.remove('flex');
+  document.body.style.overflow = '';
+}
+rateCardsBtn.addEventListener('click', openRateModal);
+rateModalClose.addEventListener('click', closeRateModal);
+rateModalCloseInline.addEventListener('click', closeRateModal);
+rateModalBackdrop.addEventListener('click', closeRateModal);
+
+/* ===================== ABOUT ME MODAL ===================== */
+const aboutModal = document.getElementById('aboutModal');
+const aboutModalBackdrop = document.getElementById('aboutModalBackdrop');
+const aboutModalClose = document.getElementById('aboutModalClose');
+const aboutModalCloseInline = document.getElementById('aboutModalCloseInline');
+const aboutMeBtn = document.getElementById('aboutMeBtn');
+
+function openAboutModal() {
+  aboutModal.classList.remove('hidden');
+  aboutModal.classList.add('flex');
+  document.body.style.overflow = 'hidden';
+}
+function closeAboutModal() {
+  aboutModal.classList.add('hidden');
+  aboutModal.classList.remove('flex');
+  document.body.style.overflow = '';
+}
+aboutMeBtn.addEventListener('click', openAboutModal);
+aboutModalClose.addEventListener('click', closeAboutModal);
+aboutModalCloseInline.addEventListener('click', closeAboutModal);
+aboutModalBackdrop.addEventListener('click', closeAboutModal);
+
+/* ===================== SHARED MODAL KEYBOARD HANDLING ===================== */
 document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    if (!modal.classList.contains('hidden')) closeModal();
+    if (!rateModal.classList.contains('hidden')) closeRateModal();
+    if (!aboutModal.classList.contains('hidden')) closeAboutModal();
+    return;
+  }
   if (modal.classList.contains('hidden')) return;
-  if (e.key === 'Escape') closeModal();
   if (e.key === 'ArrowLeft') stepModal(-1);
   if (e.key === 'ArrowRight') stepModal(1);
+});
+
+/* ===================== BACK TO TOP (fixed for mobile) ===================== */
+const backToTopBtn = document.getElementById('backToTopBtn');
+backToTopBtn.addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
 /* ===================== CLOCK + YEAR ===================== */
